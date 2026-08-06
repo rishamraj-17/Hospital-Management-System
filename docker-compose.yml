@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: hms-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-hms}
+      POSTGRES_USER: ${DB_USER:-hms_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-hms_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-hms_user} -d ${DB_NAME:-hms}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: hms-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/${DB_NAME:-hms}
+      - DB_USER=${DB_USER:-hms_user}
+      - DB_PASSWORD=${DB_PASSWORD:-hms_password}
+      - JWT_SECRET=${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: hms-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@hms.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

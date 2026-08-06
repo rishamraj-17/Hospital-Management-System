@@ -1,0 +1,15 @@
+# Handle line endings automatically for files detected as text
+* text=auto
+
+# Enforce Unix line endings for shell scripts and properties
+*.sh text eol=lf
+*.properties text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Java source code
+*.java text diff=java
+
+# Binary files
+*.jar binary
+*.class binary

@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+jwt:
+  secret: ${JWT_SECRET}
+
+logging:
+  level:
+    root: INFO
+    com.portfolio.hms: INFO
+    org.springframework.web: WARN
+    org.hibernate: ERROR
