@@ -47,3 +47,4 @@ Thumbs.db
 ### Local Maven installation ###
 apache-maven-*/
 apache-maven-*.tar.gz
+spotbugs_output.txt
